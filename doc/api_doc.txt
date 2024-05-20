@@ -1,0 +1,35 @@
+ticker – The ticker symbol.
+股票代碼 – 股票代碼。
+
+multiplier – The size of the timespan multiplier.
+乘數 – 時間跨度乘數的大小。如(multiplier=2, timespan="hour") => 每2小時報一次
+
+timespan – The size of the time window.
+timespan – 時間窗口的大小。 | second minute hour day week month quarter year
+
+from_ – The start of the aggregate time window as YYYY-MM-DD, a date, Unix MS Timestamp, or a datetime.
+from_ – 聚合時間視窗的開始，格式為 YYYY-MM-DD、日期、Unix MS 時間戳或日期時間。
+
+to – The end of the aggregate time window as YYYY-MM-DD, a date, Unix MS Timestamp, or a datetime.
+to – 聚合時間視窗的結束時間，如 YYYY-MM-DD、日期、Unix MS 時間戳或日期時間。
+
+adjusted – Whether the results are adjusted for splits. By default, results are adjusted. Set this to false to get results that are NOT adjusted for splits.
+調整 – 是否針對分割調整結果。預設情況下，結果會進行調整。將其設為 false 可以獲得不針對分割進行調整的結果。
+
+sort – Sort the results by timestamp. asc will return results in ascending order (oldest at the top), desc will return results in descending order (newest at the top).The end of the aggregate time window.
+sort – 依時間戳記對結果進行排序。 asc 將按升序傳回結果（最舊的在頂部），desc 將按降序傳回結果（最新的在頂部）。
+
+limit – Limits the number of base aggregates queried to create the aggregate results. Max 50000 and Default 5000. Read more about how limit is used to calculate aggregate results in our article on Aggregate Data API Improvements.
+limit – 限制為建立聚合結果而查詢的基本聚合的數量。最大 50000 和預設 5000。
+
+params – Any additional query params
+params – 任何附加查詢參數
+
+raw – Return raw object instead of results object
+raw – 傳回原始物件而不是結果對象
+
+.gt: greater than
+.gte: greater than or equal to
+.lt: less than
+.lte: less than or equal to
+
