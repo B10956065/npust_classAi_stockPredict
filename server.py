@@ -61,6 +61,11 @@ def incremental():
 
 
 if __name__ == '__main__':
-    price = predictNextDay(timeStep=60)
-    writeDataIntoFirebase(price, '2024-05-01T03:00:00+08:00')
+    # price = predictNextDay(timeStep=60)
+    # writeDataIntoFirebase(price, '2024-05-01T03:00:00+08:00')
+
+    nameDate = "2024-05-01"
+    nameTime = "T03:00:00+08:00"
+    newData = stock.fetch_stock_data('GOOG', nameDate, nameDate)
+    print(newData)
     pass
