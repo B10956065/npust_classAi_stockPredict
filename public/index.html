@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="myStyle.css">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <h1>Hello World, Stocks Prediction</h1>
+</header>
+
+<main>
+    <div>
+        <label for="dateInput1">start date</label>
+        <input id="dateInput1" type="date"/>
+        <label for="dateInput2">end date</label>
+        <input id="dateInput2" type="date"/>
+        <input id="compCode" type="text" placeholder="comp code" value="GOOG" disabled/>
+        <button id="submitButton" type="button">submit</button>
+    </div>
+    <div>
+        <img src="randomTestStockChart.png" alt="random stock chart for test">
+    </div>
+</main>
+
+<footer></footer>
+
+<script>
+    const socket = io();
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const dateInput1 =document.getElementById("dateInput1");
+        const dateInput2 = document.getElementById("dateInput2");
+        const now = new Date();
+
+        const ago = new Date();
+        ago.setMonth(now.getMonth()-1)
+
+        const formatDate = (date) => {
+            const year = date.getFullYear();
+            const month = (date.getMonth()+1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+        dateInput1.value = formatDate(ago);
+        dateInput2.value = formatDate(now);
+    });
+
+    document.getElementById("submitButton").addEventListener("click", function (message) {
+        const start = document.getElementById("dateInput1").value;
+        const end = document.getElementById("dateInput2").value;
+        const compCode = document.getElementById("compCode").value;
+        socket.emit("chartRequest", {
+            startDate: start,
+            endDate: end,
+            compCode: compCode
+        });
+    });
+
+    socket.on("chartResponse", function (data) {
+        console.log(data);
+        alert(data);
+    });
+
+</script>
+</body>
+</html>
