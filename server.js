@@ -6,6 +6,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+const { queryAndProcess } = require('./getDataFromFire');
+
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
@@ -17,16 +19,18 @@ io.on('connection', (socket) => {
 
     // Get stocks chart's data request from client, get data from server according request and response
     socket.on('chartRequest', (data) => {
-        const result = `chart for '${data.compCode}' in ${data.startDate} ~ ${data.endDate}`
+        // date to timestamp
+        // the timestamp in database is "second", but it's "millisecond" in js, need to convert.
+        const startTimestamp = Math.floor(new Date(data.startDate).getTime()/1000)
+        const endTimestamp = Math.floor(new Date(data.endDate).getTime()/1000)
 
         // get data from gcp firebase
-
-
-        // return result to client
-        socket.emit('chartResponse', result)
+        queryAndProcess(startTimestamp, endTimestamp, data.compCode).then(result => {
+            console.log(result)
+            // return result to client
+            socket.emit('chartResponse', result.documents)
+        });
     });
-
-
 });
 
 const PORT = process.env.PORT || 8080;

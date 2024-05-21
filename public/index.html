@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="myStyle.css">
     <title>Title</title>
@@ -21,8 +23,8 @@
         <input id="compCode" type="text" placeholder="comp code" value="GOOG" disabled/>
         <button id="submitButton" type="button">submit</button>
     </div>
-    <div>
-        <img src="randomTestStockChart.png" alt="random stock chart for test">
+    <div style="width: 50%">
+        <canvas id="stockChart"></canvas>
     </div>
 </main>
 
@@ -61,8 +63,42 @@
     });
 
     socket.on("chartResponse", function (data) {
-        console.log(data);
-        alert(data);
+        // console.log(data);
+        const ctx = document.getElementById('stockChart');
+        const labels = data.map(item => new Date(item.datetime * 1000).toLocaleString());
+        const prices = data.map(item => item.price);
+        console.log(labels, prices)
+
+        const stockChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Stock Price',
+                    data: prices,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'category',
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Price'
+                        }
+                    }
+                }
+            }
+        });
     });
 
 </script>

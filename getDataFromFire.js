@@ -6,11 +6,15 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 
-async function queryPricePrediction(startTime, endTime, code) {
-    let documents = []; // 用于存储查询到的文档数据
+async function queryPricePrediction(startTimestamp, endTimestamp, compCode) {
+    let documents = []; // to save queried results
     try {
-        // 向Firestore发起查询
+        // get data from firestore
         const querySnapshot = await db.collection('classAi_prediction')
+            .where('code', '==', compCode)
+            .where('datetime', '>=', startTimestamp)
+            .where('datetime', '<=', endTimestamp)
+            .orderBy('datetime', 'asc')
             .get()
 
         querySnapshot.forEach(doc => {
@@ -23,11 +27,20 @@ async function queryPricePrediction(startTime, endTime, code) {
     }
 }
 
-//
-async function queryAndProcess() {
-    const result = await queryPricePrediction(0, 0, "GOOG")
+/**
+ * 查詢並處理 classAi_prediction 集合中的資料
+ * 根據給定的起始時間和結束時間，以及公司代碼進行過濾和排序
+ *
+ * @param {number} startTimestamp - 查詢的起始時間
+ * @param {number} endTimestamp - 查詢的結束時間
+ * @param {string} [compCode="GOOG"] - 公司代碼，默認值為 "GOOG"
+ * @returns {Promise<{documents: [], count: number}|{documents: [], count: number}>} - 返回查詢結果的 Promise，結果為包含文件 ID 和數據的對象數組。
+ * use result.documents to get content like: result.documents['code' / 'price' / 'datetime']
+ */
+async function queryAndProcess(startTimestamp, endTimestamp, compCode="GOOG") {
+    const result = await queryPricePrediction(startTimestamp, endTimestamp, compCode)
     console.log("found data number : ", result.count)
-    // console.log(result.documents)
+    //console.log(result.documents)
     return result;
 }
 
@@ -45,14 +58,15 @@ function convertTimestampToDateTime(timestamp) {
 }
 
 
-
 // test
 if (require.main === module) {
-    queryAndProcess().then(r => {
+    queryAndProcess(1,9999999999).then(r => {
         r.documents.forEach(row=> {
             console.log(row['code']," => ",
                 row['price']," => ",
-                convertTimestampToDateTime(row['datetime']['_seconds']), "\n")
+                convertTimestampToDateTime(row['datetime']), "\n")
         });
     });
 }
+
+module.exports = {queryAndProcess};
