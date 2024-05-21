@@ -76,7 +76,7 @@ def predict_next_day(model, data, time_step=60):
 
 
 if __name__ == '__main__':
-    scaled_prices, scaler = read_and_preprocess('data/stock_google_new.csv')
+    scaled_prices, scaler = read_and_preprocess('../data/stock_google_new.csv')
     time_step = 60
     initial_model = train_init_model(scaled_prices, time_step)
     predicted_price = predict_next_day(initial_model, scaled_prices)

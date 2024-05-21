@@ -18,6 +18,13 @@ from keras.callbacks import EarlyStopping
 
 
 def read_and_preprocess(file_path):
+    """
+
+    :param file_path:The dataset.csv file path
+    :return: data:The original dataset.
+    scaled_prices:The scaled prices.
+    scaler:The scaler
+    """
     # Read the CSV file
     data = pd.read_csv(file_path)
 
@@ -75,7 +82,7 @@ def train_init_model(X_train, y_train, time_step=60, epochs=1, batch_size=1):
 
 # incremental learning
 def incremental_learning(model, new_data, time_step=60, epochs=1, batch_size=1):
-    '''
+    """
     input old model and new data, return new model
     :param model:
     :param new_data:
@@ -83,7 +90,7 @@ def incremental_learning(model, new_data, time_step=60, epochs=1, batch_size=1):
     :param epochs:
     :param batch_size:
     :return:
-    '''
+    """
     X, y = create_dataset(new_data, time_step)
     X = X.reshape(X.shape[0], X.shape[1], 1)
     model.fit(X, y, epochs=epochs, batch_size=batch_size, verbose=1)
@@ -100,6 +107,7 @@ def predict_next_day(model, data, scaler, time_step=60):
 
     pred_price = model.predict(X_test)
     pred_price = scaler.inverse_transform(pred_price)
+
     return pred_price[0, 0]
 
 

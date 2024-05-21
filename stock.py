@@ -1,7 +1,7 @@
 from polygon import RESTClient
 import key
 
-api_key = key.polygon.key
+api_key = None  # FIXME: api key
 
 
 def fetch_stock_data(ticker, start_date, end_date):

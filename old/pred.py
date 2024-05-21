@@ -3,10 +3,10 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.python.keras.models import load_model
 
-model = load_model("data/myModel_stock_LSTM.h5")
+model = load_model("../data/myModel_stock_LSTM.h5")
 
 # 假設你已經有了訓練資料，並且放在名為"data.csv"的CSV檔案中
-data = pd.read_csv("data/stock_google_plus.csv")
+data = pd.read_csv("../data/stock_google_plus.csv")
 
 # 假設你的資料包括一列為"Close"的收盤價
 close_prices = data["Close"].values.reshape(-1, 1)
